@@ -335,7 +335,7 @@ class command_missing_exception : public OptionParseException {
 public:
   command_missing_exception()
       : OptionParseException(
-            "A valid command should be provided, see help for detail") {}
+            "A valid command should be provided, run with --help for detail") {}
 };
 
 class command_requires_option_exception : public OptionParseException {
@@ -343,7 +343,7 @@ public:
   command_requires_option_exception(const std::string &cmd,
                                     const std::string option)
       : OptionParseException("Command " + LQUOTE + cmd + RQUOTE +
-                             "needs option" + LQUOTE + option + RQUOTE +
+                             " needs option " + LQUOTE + option + RQUOTE +
                              " but not present") {}
 };
 
@@ -927,6 +927,8 @@ public:
     return riter->second.count();
   }
 
+  bool GotCommand(const String &cmd) { return cmd == parsed_cmd.m_name; }
+
   const OptionValue &operator[](const std::string &option) const {
     auto iter = m_options->find(option);
 
@@ -1324,7 +1326,7 @@ inline void ParseResult::check_command() const {
 
     bool found = false;
     for (const auto &kv : m_results) {
-      if (kv.first->short_name() == opt) {
+      if (kv.first->short_name() == opt && kv.second.count()) {
         found = true;
         break;
       }
@@ -1696,6 +1698,8 @@ Options::help(const std::vector<std::string> &help_groups) const {
   result += "\n\n";
 
   generate_command_help(result);
+
+  result += "Option(s):\n";
 
   if (help_groups.size() == 0) {
     generate_all_groups_help(result);

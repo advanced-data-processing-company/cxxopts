@@ -21,4 +21,7 @@
 if(CXXOPTS_BUILD_EXAMPLES)
     add_executable(example example.cpp)
     target_link_libraries(example cxxopts)
+
+    add_executable(log log.cpp)
+    target_link_libraries(log cxxopts)
 endif()

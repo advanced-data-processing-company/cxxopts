@@ -39,6 +39,8 @@ cxxopts::ParseResult parse(int argc, char *argv[]) {
       .add_options()
       ("a,apple", "an apple", cxxopts::value<bool>(apple))
       ("b,bob", "Bob")
+      ("l, level", "level", cxxopts::value<int>())
+      ("m,module", "module", cxxopts::value<int>())
       ("t,true", "True", cxxopts::value<bool>()->default_value("true"))
       ("f, file", "File", cxxopts::value<std::vector<std::string>>(), "FILE")
       ("i,input", "Input", cxxopts::value<std::string>())
@@ -50,7 +52,7 @@ cxxopts::ParseResult parse(int argc, char *argv[]) {
       ("long-description",
         "thisisareallylongwordthattakesupthewholelineandcannotbebrokenataspace")
       ("h,help", "Print help")
-      ("int", "An integer", cxxopts::value<int>(), "model level")
+      ("int", "An integer", cxxopts::value<uint8_t>(), "model level")
       ("float", "A floating point number", cxxopts::value<float>())
       ("option_that_is_too_long_for_the_help", "A very long option")
     #ifdef CXXOPTS_USE_UNICODE
@@ -113,8 +115,20 @@ cxxopts::ParseResult parse(int argc, char *argv[]) {
       std::cout << "}" << std::endl;
     }
 
+    if (result.count("level")) {
+      std::cout << "level = " << result["level"].as<int>() << std::endl;
+    }
+
+    if (result.count("m")) {
+      std::cout << "module = " << result["m"].as<int>() << std::endl;
+    }
+
     if (result.count("int")) {
-      std::cout << "int = " << result["int"].as<int>() << std::endl;
+
+      auto value = result["int"].as<uint8_t>();
+      (void)value;
+
+      std::cout << "int = " << value << std::endl;
     }
 
     if (result.count("float")) {
